@@ -6,7 +6,7 @@ from langchain import FewShotPromptTemplate, PromptTemplate, LLMChain
 load_dotenv()
 os.environ['OPENAI_API_KEY'] = os.getenv("OPENAI_API_KEY")
 
-davinci = OpenAI(model_name='text-davinci-003')
+openai = OpenAI(model_name='text-davinci-003')
 
 # template = """Question: {question}
 
@@ -34,10 +34,27 @@ example_prompt = PromptTemplate(
     template=example_template
 )
 
-llm_chain = LLMChain(
-    prompt=example_prompt,
-    llm=davinci
+prefix = """The following are exerpts from conversations with an AI assistant. 
+The assistant is always sarcastic and witty. Here are a few examples:"""
+
+suffix = """
+User: {query}
+AI:"""
+
+few_shot_prompt_template = FewShotPromptTemplate(
+    examples = examples,
+    example_prompt=example_prompt,
+    prefix=prefix,
+    suffix=suffix,
+    input_variables=["query"],
+    example_separator="\n\n"
 )
+
+query="What is the meaning of life?"
+
+print(few_shot_prompt_template.format(query=query))
+
+print(openai(few_shot_prompt_template.format(query=query)))
 # question = "Which NFL team won the Super Bowl in the 2010 season?"
 
 # print(llm_chain.run(question))
