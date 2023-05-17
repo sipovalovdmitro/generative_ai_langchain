@@ -23,12 +23,27 @@ question = "Which NFL team won the Super Bowl in the 2010 season?"
 
 print(llm_chain.run(question))
 
-qs=[
-    {'question':"Which NFT team won the Super Bowl in the 2010 season?"},
-    {'question':"If I am 6 ft 4 inches, how tall am I in centimeters?"},
-    {'question':"Who was the 12th person on the moon?"},
-    {'question':"How many eyes does a blade of grass have?"}
-]
+# qs=[
+#     {'question':"Which NFT team won the Super Bowl in the 2010 season?"},
+#     {'question':"If I am 6 ft 4 inches, how tall am I in centimeters?"},
+#     {'question':"Who was the 12th person on the moon?"},
+#     {'question':"How many eyes does a blade of grass have?"}
+# ]
 
-res = llm_chain.generate(qs)
+multi_template = """Answer the following questions one at a time.
+
+Questions:
+{questions}
+
+Answers:
+"""
+long_prompt = PromptTemplate(template=multi_template, input_variables=["questions"])
+qs_str =(
+    "Which NFT team won the Super Bowl in the 2010 season?\n"+
+    "If I am 6 ft 4 inches, how tall am I in centimeters?\n"+
+    "Who was the 12th person on the moon?\n"+
+    "How many eyes does a blade of grass have?"
+)
+
+res = llm_chain.run(qs_str)
 print(res)
