@@ -35,8 +35,18 @@ conversation_buf = ConversationChain(
     memory=ConversationBufferMemory()
 )
 
-count_tokens(conversation_buf, "Good morning AI!")
-count_tokens(conversation_buf, "My interest here is to explore the potential of integrating LLM.")
-count_tokens(conversation_buf, "What is my aim?")
+conversation_sum = ConversationChain(
+    llm=llm,
+    memory=ConversationSummaryMemory(llm=llm)
+)
 
-print(conversation_buf.memory.buffer)
+print(conversation_sum.memory.prompt.template)
+
+count_tokens(conversation_sum, "Good morning AI!")
+count_tokens(conversation_sum, "My interest here is to explore the potential of integrating LLM.")
+count_tokens(conversation_sum, "What is my aim?")
+# count_tokens(conversation_buf, "Good morning AI!")
+# count_tokens(conversation_buf, "My interest here is to explore the potential of integrating LLM.")
+# count_tokens(conversation_buf, "What is my aim?")
+
+print(conversation_sum.memory.buffer)
